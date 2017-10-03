@@ -1,0 +1,103 @@
+1-Install VMWare Station.
+2-Open VMWare and generate a serial from \VMware Workstation\keygen.exe  (Request the package of tools to the people who explain this workshop)
+3-When VMWare starts you will see a option of Create a New Virtual Machine, click there.
+4-And now a new tap open. You choose the Option "Typical(recommended)". Click Next.
+5-You have two optiones to install the OS. First from a disk or second from a ISO. 
+We choose the second option. And you click on Browse and search the folder who contains the ISO (VMware-VMvisor-Installer-201701001-4887370.x86_64).
+Click Next.
+6-In this section you write the name what you want for your virtual machine.
+Our recommendation is to call it "WorkshopOne". Click Next.
+7-You can choose the disk size. The GB recommended for the program it's ok.
+And choose "Split Virtual Disk Into Multiple Files". Next Option.
+8-Click Finish
+
+
+9-Now you going to see a blue screen with two option. Choose the first one.
+10-The instalation will take around 3 minutes.
+11-In the grey window with the title "Welcome to the VMWare ESXi..."
+Press enter to continue.
+12-Later F11 to Accept License permission.
+13-In select a disk to install choose the local option. Press Enter.
+14-Keyboard (US Default)
+15-Root password. Remember for this type of password you should follow a series of recommendations like:
+a-No consecutive numbers.
+b-Less four numbers.
+c-Minimum a special symbol.
+d-Capital letter.
+e-Minium three letter.
+But for this workshop we will use something more simple like: "workshopTest2017".
+Enter to Continue.
+16-Press F11 to install.
+17-Enter to Reboot.
+18-After the reboot you are going to see two URLs. Take the fisrt one and write at the browser.
+In this window you'll see a Login form. In the installation before you create a user with the name root.
+Use that user name and the password you was choose.
+19-This page open the client of VMWare ESXi. Select the option of Create/Register VM
+20-Select "Create a new virtual machine". Push next.
+21-Choose a name. For our recomendation put it "UbuntuServerVM".
+"Guest OS famili: Linux"
+"Guest OS version: Ubuntu Linux (64-bit)"
+22-In Customize Setting you choose the features of our virtual server. Go to VM Options and search the option of Force BIOS setup.
+Mark that option and press next.
+23-After create the VM. In the left of the client search the option Navigator.
+Press that option and this will open a menu bar.
+24-Right Click in the VM and select the option Console/Remote  Console. And open it with the VMWare Console.
+25-Play the VM and the BIOS menu going to show.
+26-Go to the boot optiones and put them in this order:
+CD-ROM
+Hard Drive
+Removable Devices
+Network boot
+Do not save changes already. 
+27-In the window of the Virtual Server of Ubuntu, press right click and select Remote Devices -> CD-ROM -> Settings.
+Select Location : Local Client.
+You are going to watch two optiones. You choose "Use ISO image file:" and select the ISO of Ubuntu Server. 
+Click in finish.
+28-Install Ubuntu. (Follow the instructions of the speakers)
+29-Configure Network in Ubuntu. Hostname for the system : "testserver".
+30-Set up Users and Passwords. Your Name.
+31-username for the new account: "testadmi". Continue.
+32-password: workshopTest2017.
+
+Create a Snapshot
+
+Note**: For all the commands you need to write the word sudo first.
+Command Line of Ubuntu Server
+
+1-sudo fdisk -l (list of disk)
+2-sudo fdisk /dev/sdb (new partition)
+3-You are in a special fdisk prompt.
+write:
+n (create a new partition)
+p (creates primary partition)
+1 (makes partition the first on the disk)
+
+4-Prepare the partition to be used by LVM:
+t (change partition type)
+8e (changes to LVM partition type)
+
+5-Verify and write the information to the hard drive.
+p (view partition setup)
+w (write changes to disk)
+
+6-After you write the disk you return to the normal mode.
+sudo pvcreate /dev/sdb1 (create a LVM physical volume)
+
+7-Create a Volume Group
+sudo vgcreate vgtest /dev/sdb1
+
+8-Create Logical Volume.
+sudo lvcreate -L 5G -n lvstuff vgtest
+
+9-Format and Mount the Logical Volume
+sudo mkfs -t ext4 /dev/vgtest/lvstuff
+
+10-Create a mount point.
+sudo mkdir /mnt/stuff
+sudo mount -t ext4 /dev/vgtest/lvstuff /mnt/stuff
+
+11-Create new snapshot
+sudo lvcreate -L 4G -s -n lvstuffbackup /dev/vgtest/lvstuff
+
+
+ 
